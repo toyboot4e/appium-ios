@@ -3,6 +3,7 @@ import net from 'node:net';
 import {describe, it} from 'node:test';
 
 import {upgradeSocketToTLS} from '../../../src/lib/lockdown/index.js';
+import {DEVICE_CERT} from '../../helpers/tls-certificates.js';
 
 describe('upgradeSocketToTLS', function () {
   it('rejects when the peer never completes the TLS handshake', async function () {
@@ -14,7 +15,10 @@ describe('upgradeSocketToTLS', function () {
     await new Promise<void>((resolve) => socket.once('connect', resolve));
 
     try {
-      await assert.rejects(upgradeSocketToTLS(socket, {}, 100), /TLS handshake timed out after 100ms/);
+      await assert.rejects(
+        upgradeSocketToTLS(socket, {deviceCertificate: DEVICE_CERT}, 100),
+        /TLS handshake timed out after 100ms/,
+      );
     } finally {
       socket.destroy();
       accepted.forEach((s) => s.destroy());
@@ -31,7 +35,7 @@ describe('upgradeSocketToTLS', function () {
 
     try {
       await assert.rejects(
-        upgradeSocketToTLS(socket, {key: 'not-a-pem', cert: 'not-a-pem'}, timeoutMs),
+        upgradeSocketToTLS(socket, {key: 'not-a-pem', cert: 'not-a-pem', deviceCertificate: DEVICE_CERT}, timeoutMs),
         /TLS socket error/,
       );
       // outlive the would-be timer
