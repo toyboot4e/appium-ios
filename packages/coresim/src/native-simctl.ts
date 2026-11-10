@@ -1,3 +1,4 @@
+/* eslint-disable import/no-duplicates -- the bare imports below are intentional */
 import {execFileSync} from 'node:child_process';
 import {createRequire} from 'node:module';
 
