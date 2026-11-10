@@ -60,6 +60,36 @@ bool LoadPem(SSL_CTX* ctx, const std::string& pem, bool is_cert, std::string& er
   return true;
 }
 
+/**
+ * The chain is not validated: lockdown certificates have an empty subject and issuer, so OpenSSL
+ * takes the device certificate for a self-signed one and refuses it even when the pair record's
+ * root certificate is trusted. The handshake proves the peer holds the private key of the
+ * certificate it presents, and an exact match with the pair record's device certificate
+ * authenticates the device.
+ */
+bool PeerPresentsCertificate(SSL* ssl, const std::string& expected_pem, std::string& error) {
+  BIO* bio = BIO_new_mem_buf(expected_pem.data(), static_cast<int>(expected_pem.size()));
+  X509* expected = bio == nullptr ? nullptr : PEM_read_bio_X509(bio, nullptr, nullptr, nullptr);
+  BIO_free(bio);
+  if (expected == nullptr) {
+    error = "Failed to load device certificate PEM";
+    return false;
+  }
+
+#if OPENSSL_VERSION_NUMBER >= 0x30000000L
+  X509* presented = SSL_get1_peer_certificate(ssl);
+#else
+  X509* presented = SSL_get_peer_certificate(ssl);
+#endif
+  const bool matches = presented != nullptr && X509_cmp(presented, expected) == 0;
+  X509_free(presented);
+  X509_free(expected);
+  if (!matches) {
+    error = "The device presented a TLS certificate that does not match the device certificate of its pair record";
+  }
+  return matches;
+}
+
 void SetNonBlockingFd(int fd) {
 #ifdef _WIN32
   u_long mode = 1;
@@ -207,8 +237,8 @@ bool TunnelSslClient::ConnectTls(int timeout_ms, std::string& error) {
   }
 }
 
-bool TunnelSslClient::Connect(int tcp_fd, const std::string& cert_pem, const std::string& key_pem, int timeout_ms,
-                              std::string& error) {
+bool TunnelSslClient::Connect(int tcp_fd, const std::string& cert_pem, const std::string& key_pem,
+                              const std::string& device_cert_pem, int timeout_ms, std::string& error) {
   Close();
   if (tcp_fd < 0) {
     error = "Invalid TCP file descriptor";
@@ -260,7 +290,7 @@ bool TunnelSslClient::Connect(int tcp_fd, const std::string& cert_pem, const std
   }
 
   SSL_set_fd(ssl_, owned_fd_);
-  if (!ConnectTls(timeout_ms, error)) {
+  if (!ConnectTls(timeout_ms, error) || !PeerPresentsCertificate(ssl_, device_cert_pem, error)) {
     Close();
     return false;
   }

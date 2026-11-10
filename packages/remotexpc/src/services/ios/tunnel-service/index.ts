@@ -11,6 +11,8 @@ export interface CoreDeviceProxyTcpSession {
   socket: Socket;
   cert: string;
   key: string;
+  /** PEM device certificate from the pair record, pinned by the native TLS client. */
+  deviceCert: string;
 }
 
 /**
@@ -42,7 +44,7 @@ export async function startCoreDeviceProxyTcp(
   const usbmux = await createUsbmux();
   try {
     const pairRecord = await usbmux.readPairRecord(udid);
-    if (!pairRecord || !pairRecord.HostCertificate || !pairRecord.HostPrivateKey) {
+    if (!pairRecord || !pairRecord.HostCertificate || !pairRecord.HostPrivateKey || !pairRecord.DeviceCertificate) {
       throw new Error('Missing required pair record or certificates for TLS upgrade');
     }
 
@@ -54,6 +56,7 @@ export async function startCoreDeviceProxyTcp(
       socket: coreDeviceSocket,
       cert: pairRecord.HostCertificate,
       key: pairRecord.HostPrivateKey,
+      deviceCert: pairRecord.DeviceCertificate,
     };
   } catch (err) {
     await usbmux.close().catch((closeErr) => log.error(`Error closing usbmux: ${closeErr}`));

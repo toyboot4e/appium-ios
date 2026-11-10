@@ -9,10 +9,12 @@ import type {TunnelInfo} from './types.js';
 const require = createRequire(import.meta.url);
 const nativeTuntap = require('node-gyp-build')(getPkgRoot()) as NativeTuntapModule;
 
-/** PEM host certificate + private key from the usbmux pair record (lockdown TLS). */
+/** PEM host certificate + private key and device certificate from the usbmux pair record (lockdown TLS). */
 export interface TunnelLockdownTlsCredentials {
   cert: string;
   key: string;
+  /** The connection fails unless the device presents exactly this certificate. */
+  deviceCert: string;
 }
 
 /** Pre-shared key from Apple TV Remote Pairing pair-verify (X25519 shared secret). */
@@ -23,8 +25,8 @@ export interface TunnelPskTlsCredentials {
 }
 
 interface NativeTunnelForwarder {
-  connect(tcpFd: number, certPem: string, keyPem: string): Promise<void>;
-  connectHost(host: string, port: number, certPem: string, keyPem: string): Promise<void>;
+  connect(tcpFd: number, certPem: string, keyPem: string, deviceCertPem: string): Promise<void>;
+  connectHost(host: string, port: number, certPem: string, keyPem: string, deviceCertPem: string): Promise<void>;
   connectPsk(tcpFd: number, psk: Buffer, identity?: string): Promise<void>;
   connectPskHost(host: string, port: number, psk: Buffer, identity?: string): Promise<void>;
   handshake(requestedMtu: number): Promise<TunnelInfo>;
@@ -50,9 +52,11 @@ export class TunnelForwarder {
 
     if (process.platform === 'win32') {
       const {host, port} = await this.bridgeToNative(tcpSocket);
-      await this.forwarder.connectHost(host, port, credentials.cert, credentials.key);
+      await this.forwarder.connectHost(host, port, credentials.cert, credentials.key, credentials.deviceCert);
     } else {
-      await handOffSocket(tcpSocket, (fd) => forwarder.connect(fd, credentials.cert, credentials.key));
+      await handOffSocket(tcpSocket, (fd) =>
+        forwarder.connect(fd, credentials.cert, credentials.key, credentials.deviceCert),
+      );
     }
   }
 
