@@ -531,6 +531,7 @@
 		712A0C851DA3E459007D02E5 /* FBXPathTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 712A0C841DA3E459007D02E5 /* FBXPathTests.m */; };
 		712A0C871DA3E55D007D02E5 /* FBXPath-Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 712A0C861DA3E55D007D02E5 /* FBXPath-Private.h */; };
 		713352FD26CEF31D00523CBC /* FBLRUCacheTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 713352FC26CEF31D00523CBC /* FBLRUCacheTests.m */; };
+		A1B2C3D4E5F60718293A4B5D /* FBAlertTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F60718293A4B5C /* FBAlertTests.m */; };
 		7136A4791E8918E60024FC3D /* XCUIElement+FBPickerWheel.h in Headers */ = {isa = PBXBuildFile; fileRef = 7136A4771E8918E60024FC3D /* XCUIElement+FBPickerWheel.h */; };
 		7136A47A1E8918E60024FC3D /* XCUIElement+FBPickerWheel.m in Sources */ = {isa = PBXBuildFile; fileRef = 7136A4781E8918E60024FC3D /* XCUIElement+FBPickerWheel.m */; };
 		7136C0F9243A182400921C76 /* FBW3CTypeActionsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7136C0F8243A182400921C76 /* FBW3CTypeActionsTests.m */; };
@@ -1590,6 +1591,7 @@
 		712A0C841DA3E459007D02E5 /* FBXPathTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBXPathTests.m; sourceTree = "<group>"; };
 		712A0C861DA3E55D007D02E5 /* FBXPath-Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBXPath-Private.h"; sourceTree = "<group>"; };
 		713352FC26CEF31D00523CBC /* FBLRUCacheTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBLRUCacheTests.m; sourceTree = "<group>"; };
+		A1B2C3D4E5F60718293A4B5C /* FBAlertTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBAlertTests.m; sourceTree = "<group>"; };
 		7136A4771E8918E60024FC3D /* XCUIElement+FBPickerWheel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XCUIElement+FBPickerWheel.h"; sourceTree = "<group>"; };
 		7136A4781E8918E60024FC3D /* XCUIElement+FBPickerWheel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XCUIElement+FBPickerWheel.m"; sourceTree = "<group>"; };
 		7136C0F8243A182400921C76 /* FBW3CTypeActionsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBW3CTypeActionsTests.m; sourceTree = "<group>"; };
@@ -2750,6 +2752,7 @@
 			children = (
 				1D04760558C64B8EB69380E0 /* FBTouchableViewTests.m */,
 				ADBC39951D07840300327304 /* Doubles */,
+				A1B2C3D4E5F60718293A4B5C /* FBAlertTests.m */,
 				71A7EAFB1E229302001DA4F2 /* FBClassChainTests.m */,
 				EEE16E961D33A25500172525 /* FBConfigurationTests.m */,
 				ADBC39931D0782CD00327304 /* FBElementCacheTests.m */,
@@ -4924,6 +4927,7 @@
 				81E462B8A75F497CBFC6FD8B /* TouchableView.m in Sources */,
 				6C07E44E139D41D6BA092F39 /* FBTouchableViewTests.m in Sources */,
 				713352FD26CEF31D00523CBC /* FBLRUCacheTests.m in Sources */,
+				A1B2C3D4E5F60718293A4B5D /* FBAlertTests.m in Sources */,
 				EE3F8CFE1D08AA17006F02CE /* FBRunLoopSpinnerTests.m in Sources */,
 				AA11BB22CC33DD44EE55FF11 /* FBMjpegServerTests.m in Sources */,
 				A09D847635CA4C155583B967 /* FBXCAXClientProxyTests.m in Sources */,
