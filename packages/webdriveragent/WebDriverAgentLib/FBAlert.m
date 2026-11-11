@@ -72,6 +72,9 @@
 {
   if (!self.hasCachedAlertSnapshot) {
     XCUIElement *alertElement = self.alertElement;
+    if (self.hasCachedAlertSnapshot) {
+      return self.cachedAlertSnapshot;
+    }
     self.cachedAlertSnapshot = nil == alertElement
       ? nil
       : (alertElement.fb_cachedSnapshot ?: [alertElement fb_customSnapshot]);
